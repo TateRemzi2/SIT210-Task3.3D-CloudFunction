@@ -1,0 +1,60 @@
+int led = A5;
+
+int unit = 500;
+
+void shortBlink() {
+    digitalWrite(led, HIGH);
+    delay(unit);
+    digitalWrite(led,LOW);
+    delay(unit);
+}
+
+void longBlink() {
+    digitalWrite(led,HIGH);
+    delay(unit * 3);
+    digitalWrite(led,LOW);
+    delay(unit);
+}
+
+
+void myHandler(const char *event, const char *data)
+{
+
+
+  if (strcmp(data,"wave")==0) {
+      // Flash the LED three times after a wave
+      shortBlink();
+      shortBlink();
+      shortBlink();
+  }
+  else if (strcmp(data,"pat")==0) {
+      // Flash the LED one quickly, then two long flashes followed by a short flash
+      shortBlink();
+      longBlink();
+      longBlink();
+      shortBlink();
+  }
+  else {
+      // Do nothing
+  }
+}
+
+
+
+void setup() {
+    
+    pinMode(led, OUTPUT);
+    
+    Particle.subscribe("Deakin_RIOT_SIT210_Photon_Buddy", myHandler);
+}
+
+void loop() {
+    
+    
+    delay(20000);
+    Particle.publish("Deakin_RIOT_SIT210_Photon_Buddy","wave");
+    
+    delay(20000);
+    Particle.publish("Deakin_RIOT_SIT210_Photon_Buddy","pat");
+
+}
